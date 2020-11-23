@@ -47,6 +47,7 @@ int append_mode = 0;
 int keep_dirlinks = 0;
 int copy_dirlinks = 0;
 int copy_links = 0;
+int do_fsync = 0;
 int write_devices = 0;
 int preserve_links = 0;
 int preserve_hard_links = 0;
@@ -733,6 +734,7 @@ static struct poptOption long_options[] = {
   {"compare-dest",     0,  POPT_ARG_STRING, 0, OPT_COMPARE_DEST, 0, 0 },
   {"copy-dest",        0,  POPT_ARG_STRING, 0, OPT_COPY_DEST, 0, 0 },
   {"link-dest",        0,  POPT_ARG_STRING, 0, OPT_LINK_DEST, 0, 0 },
+  {"fsync",            0,  POPT_ARG_NONE,   &do_fsync, 0, 0, 0 },
   {"fuzzy",           'y', POPT_ARG_NONE,   0, 'y', 0, 0 },
   {"no-fuzzy",         0,  POPT_ARG_VAL,    &fuzzy_basis, 0, 0, 0 },
   {"no-y",             0,  POPT_ARG_VAL,    &fuzzy_basis, 0, 0, 0 },
@@ -2813,6 +2815,9 @@ void server_options(char **args, int *argc_p)
 
 	if (safe_symlinks)
 		args[ac++] = "--safe-links";
+
+	if (do_fsync && am_sender)
+		args[ac++] = "--fsync";
 
 	if (numeric_ids)
 		args[ac++] = "--numeric-ids";

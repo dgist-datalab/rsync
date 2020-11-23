@@ -410,6 +410,7 @@ detailed description below for a complete description.
 --partial-dir=DIR        put a partially transferred file into DIR
 --delay-updates          put all updated files into place at end
 --prune-empty-dirs, -m   prune empty directory chains from file-list
+--fsync                  fsync every written file
 --numeric-ids            don't map uid/gid values by user/group name
 --usermap=STRING         custom username mapping
 --groupmap=STRING        custom groupname mapping

@@ -25,6 +25,7 @@
 #include "itypes.h"
 #include "inums.h"
 
+extern int do_fsync;
 extern int dry_run;
 extern int module_id;
 extern int protect_args;
@@ -424,6 +425,12 @@ int copy_file(const char *source, const char *dest, int ofd, mode_t mode)
 	if (preserve_xattrs)
 		copy_xattrs(source, dest);
 #endif
+
+	if (do_fsync && fsync(ofd) < 0) {
+		rsyserr(FERROR, errno, "fsync failed on %s",
+			full_fname(dest));
+		return -1;
+	}
 
 	return 0;
 }

@@ -22,6 +22,7 @@
 #include "rsync.h"
 #include "inums.h"
 
+extern int do_fsync;
 extern int dry_run;
 extern int do_xfers;
 extern int am_root;
@@ -388,6 +389,12 @@ static int receive_data(int f_in, char *fname_r, int fd_r, OFF_T size_r,
 			rsyserr(FERROR_XFER, errno, "ftruncate failed on %s", full_fname(fname));
 	}
 #endif
+
+	if (do_fsync && fd != -1 && fsync(fd) != 0) {
+		rsyserr(FERROR, errno, "fsync failed on %s",
+			full_fname(fname));
+		exit_cleanup(RERR_FILEIO);
+	}
 
 	if (INFO_GTE(PROGRESS, 1))
 		end_progress(total_size);
